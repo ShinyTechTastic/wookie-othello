@@ -44,9 +44,9 @@ class GeneticChooser( val data:List[Double] ) extends Function1[Player, Move => 
     posIndex2( pos , 2*offset(player) + offset(cornerPlayer) );
   }
   
-  def symetry(a:Int):Int = if (a > 4 ) 8-a else a
+  final def symetry(a:Int):Int = if (a > 4 ) 8-a else a
   
-  def posIndex2( pos:(Int,Int) , offset:Int ):Int = {
+  final def posIndex2( pos:(Int,Int) , offset:Int ):Int = {
     val (x,y) = pos
     val (x2,y2) = ( symetry(x),symetry(y) )
     (x + (4*y)) + (16 * offset)

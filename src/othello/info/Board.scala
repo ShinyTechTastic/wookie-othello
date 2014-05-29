@@ -1,5 +1,7 @@
 package othello.info
 
+import scala.collection.parallel.immutable.ParSeq
+
 trait Player {
   def name:String
   def next:Player
@@ -23,7 +25,7 @@ case object Empty extends Player{
 
 class Board ( val black: Long , val white:Long , val turn:Player ){
 
-  def at( pos:(Int,Int) ): Player = {
+  final def at( pos:(Int,Int) ): Player = {
     if ( Board.valid(pos) ) Empty
   	if ( Board.at(black,pos) ) Black 
   	else if ( Board.at(white,pos) ) White
@@ -116,10 +118,10 @@ object Board {
   def placeStone( pos:(Int,Int) , data:Long ) = (0x1L << offset(pos)) | data
   def unplaceStone( pos:(Int,Int) , data:Long ) = (Long.MaxValue - (0x1L << offset(pos))) & data
   
-  def placeMultipleStones( pos:List[(Int,Int)] , data:Long ): Long =
+  def placeMultipleStones( pos:ParSeq[(Int,Int)] , data:Long ): Long =
     if ( pos.isEmpty ) data 
     else placeMultipleStones( pos.tail , placeStone( pos.head , data ) )
-  def unplaceMultipleStones( pos:List[(Int,Int)] , data:Long ): Long =
+  def unplaceMultipleStones( pos:ParSeq[(Int,Int)] , data:Long ): Long =
     if ( pos.isEmpty ) data 
     else unplaceMultipleStones( pos.tail , unplaceStone( pos.head , data ) )
   
@@ -136,10 +138,10 @@ object Board {
   val initalBlack = placeStone( (3,3) , placeStone( (4,4) , 0 ) )
   val initalWhite = placeStone( (3,4) , placeStone( (4,3) , 0 ) )
     
-  val initial = new Board(initalBlack,initalWhite,Black) // this sets up the starting board
+  val initialPos = new Board(initalBlack,initalWhite,Black) // this sets up the starting board
+  def initial = new Board( initialPos.black , initialPos.white , Black ) // This builds a new board so threads don't compete?
   
-  val directions:List[(Int,Int)] = 
-    (0,-1) :: (0,1) :: (-1,0) :: (1,0 ) ::
-    (-1,-1) :: (1,1) :: (-1,1) :: (1,-1 ) :: List()
-    
+  val directions:ParSeq[(Int,Int)] = 
+    ( (0,-1) :: (0,1) :: (-1,0) :: (1,0 ) ::
+    (-1,-1) :: (1,1) :: (-1,1) :: (1,-1 ) :: List() ).par  
 }

@@ -11,7 +11,7 @@ object Timer {
 		  val start = this.getTime();
 		  val rv = function.apply( p1 )
 		  val end = this.getTime();
-		  Timer.log( functionName +" stop ("+(end-start)+")")
+		  Timer.log( functionName +" stop ("+1e-9*(end-start)+")")
 		  rv
 	  }
 	  inner _
