@@ -24,11 +24,11 @@ class Tournament( val p1:GamePlayer , val p2:GamePlayer) {
   }
   
   def playRound():Int = {
-    val tPlayMatch = Timer.timeFunction("playMatch", playMatch _ )
+    //val tPlayMatch = Timer.timeFunction("playMatch", playMatch _ )
     if ( Random.nextBoolean ){
-      tPlayMatch( p1 , p2 )
+      playMatch( p1 , p2 )
     }else{
-      val n = tPlayMatch( p2 , p1 )
+      val n = playMatch( p2 , p1 )
       if ( n == 1 ) 2
       else if ( n==2 ) 1
       else -1
@@ -37,7 +37,7 @@ class Tournament( val p1:GamePlayer , val p2:GamePlayer) {
   
   def bestOf( n:Int ):(Int,Int) = {
     def bestOfInner( accu:(Int,Int) ):(Int,Int) = {
-      if ( accu._1 >= n || accu._2 >= n ) accu // base case
+      if ( (accu._1 + accu._2) >= n ) accu // base case
       else {
         val winner = playRound()
         if ( winner == 1 )
@@ -48,6 +48,6 @@ class Tournament( val p1:GamePlayer , val p2:GamePlayer) {
           bestOfInner( (accu._1 , accu._2 ) )
       }
     }
-    Timer.timeFunction("bestOfInner", bestOfInner _ )( (0,0) );
+    bestOfInner( (0,0) );
   }
 }

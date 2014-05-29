@@ -43,7 +43,7 @@ class Evolver[N]( val players:List[N] , compare:(N,N)=>(N,N), breed: (N,N)=>N ){
    */
   def generation: Evolver[N] = {
     val (groups,byes) = splitGroups( Random.shuffle(players) , (List(),List()) )
-    val n = groups.par.flatMap( Timer.timeFunction("compare",compete) ) // do some paralisation here, should run each set of players seperatly
+    val n = groups.par.flatMap( Timer.timeFunction("compete",compete) ) // do some paralisation here, should run each set of players seperatly
     new Evolver[N]( n.toList ::: byes , compare , breed )
   }
 }

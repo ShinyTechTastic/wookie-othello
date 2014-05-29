@@ -118,10 +118,10 @@ object Board {
   def placeStone( pos:(Int,Int) , data:Long ) = (0x1L << offset(pos)) | data
   def unplaceStone( pos:(Int,Int) , data:Long ) = (Long.MaxValue - (0x1L << offset(pos))) & data
   
-  def placeMultipleStones( pos:ParSeq[(Int,Int)] , data:Long ): Long =
+  def placeMultipleStones( pos:Seq[(Int,Int)] , data:Long ): Long =
     if ( pos.isEmpty ) data 
     else placeMultipleStones( pos.tail , placeStone( pos.head , data ) )
-  def unplaceMultipleStones( pos:ParSeq[(Int,Int)] , data:Long ): Long =
+  def unplaceMultipleStones( pos:Seq[(Int,Int)] , data:Long ): Long =
     if ( pos.isEmpty ) data 
     else unplaceMultipleStones( pos.tail , unplaceStone( pos.head , data ) )
   
@@ -141,7 +141,7 @@ object Board {
   val initialPos = new Board(initalBlack,initalWhite,Black) // this sets up the starting board
   def initial = new Board( initialPos.black , initialPos.white , Black ) // This builds a new board so threads don't compete?
   
-  val directions:ParSeq[(Int,Int)] = 
+  val directions:Seq[(Int,Int)] = 
     ( (0,-1) :: (0,1) :: (-1,0) :: (1,0 ) ::
-    (-1,-1) :: (1,1) :: (-1,1) :: (1,-1 ) :: List() ).par  
+    (-1,-1) :: (1,1) :: (-1,1) :: (1,-1 ) :: List() )  
 }
