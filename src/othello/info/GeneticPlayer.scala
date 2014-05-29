@@ -2,26 +2,26 @@ package othello.info
 import scala.util.Random
 
 class GeneticPlayer( val data:List[Double] ) extends MiniMax( 3 ) { 
-  def scoreFunction(p:Player):((Int,Int),Board)=>Double = new GeneticChooser( data )(p)
+  def scoreFunction(p:Player):(Move)=>Double = new GeneticChooser( data )(p)
 }
 
-class GeneticChooser( val data:List[Double] ) extends Function1[Player, ((Int,Int),Board) => Double] {
+class GeneticChooser( val data:List[Double] ) extends Function1[Player, Move => Double] {
 
-  def apply( p:Player ):((Int,Int),Board) => Double = {
+  def apply( p:Player ):Move => Double = {
     if ( p == Black )
       evalBlack _
     else
       evalWhite _
   }
   
-  def evalBlack( pos:(Int,Int) , board:Board):Double = {
-   val newBoard = board.play( pos )
+  def evalBlack( move:Move ):Double = {
+   val newBoard = move.board;
    val allScores:List[Double] = Board.allMoves.map(  // allMoves is also all positions
        pos => data( posIndex(pos, newBoard ) ) );
    allScores.foldRight( 0.0 )( (a,b)=>a+b )
   }
   
-  def evalWhite( pos:(Int,Int) , board:Board):Double = - evalBlack( pos , board )
+  def evalWhite( move:Move):Double = - evalBlack( move )
   
   final def offset( p:Player):Int = {
     if ( p == Black ) 1

@@ -44,7 +44,7 @@ class Board ( val black: Long , val white:Long , val turn:Player ){
 			  	 Board.placeMultipleStones(flips,white) , Black )
   }
   
-  final lazy val validMoves:List[(Int,Int)] = Board.allMoves.filter( this.isValidMove )
+  final lazy val validMoves:List[Move] = Board.allMoves.filter( this.isValidMove ).map( x => new Move(x,this) )
     
   final def isValidMove( pos:(Int,Int) ):Boolean = {
     // it's empty        AND             there exists a direction that would Flip something...
@@ -96,6 +96,14 @@ class Board ( val black: Long , val white:Long , val turn:Player ){
         println( "" )
       }
   } 
+}
+
+class Move( val pos:(Int,Int) , parent:Board ){
+  final lazy val board = parent.play( pos ) 
+}
+
+object Move {
+  val pass = new Move( (-1,-1) , Board.initial )
 }
 
 object Board {

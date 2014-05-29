@@ -10,9 +10,9 @@ class Tournament( val p1:GamePlayer , val p2:GamePlayer) {
 		if ( moves.isEmpty ) b // base case, no moves avaliable
 		else{
 		  if ( b.turn == Black )
-			playMove( b.play( pA.choose( moves , b ) ) )
+			playMove( pA.choose( moves , b ).board )
 		  else
-			playMove( b.play( pB.choose( moves , b ) ) )
+			playMove( pB.choose( moves , b ).board )
 		}
     }
     val b = playMove( Board.initial )

@@ -2,17 +2,17 @@ package othello.info
 import scala.util.Random
 
 abstract class GamePlayer {
-  def choose( list:List[(Int,Int)] , b:Board ):(Int,Int)
+  def choose( list:List[Move] , b:Board ):(Move)
 }
 
 object RandomPlayer extends GamePlayer {
-  override def choose( list:List[(Int,Int)] , b:Board ):(Int,Int) = Random.shuffle(list).head
+  override def choose( list:List[Move] , b:Board ):(Move) = Random.shuffle(list).head
 }
 
 abstract class ScoringPlayer extends GamePlayer {
-  def score( move:(Int,Int) , b:Board ):Double
+  def score( move:(Move) , b:Board ):Double
   
-  def findBestMove( moves:List[(Int,Int)] , b:Board ):(Double,(Int,Int)) = {
+  def findBestMove( moves:List[Move] , b:Board ):(Double,(Move)) = {
   	val me = ( score(moves.head , b ) , moves.head )
   	if ( moves.tail.isEmpty ) me 
   	else{
@@ -22,15 +22,15 @@ abstract class ScoringPlayer extends GamePlayer {
   	}
   }  
   
-  override def choose( list:List[(Int,Int)] , b:Board):(Int,Int) = findBestMove( list , b )._2
+  override def choose( list:List[Move] , b:Board):(Move) = findBestMove( list , b )._2
 }
 
 class FlipScoringPlayer(val rand:Double) extends ScoringPlayer {
-  override def score( move:(Int,Int) , b:Board ):Double = b.getFlippedTiles( move ).length + (Random.nextDouble * rand)
+  override def score( move:(Move) , b:Board ):Double = b.getFlippedTiles( move.pos ).length + (Random.nextDouble * rand)
 }
 
 class PrintPlayer(inner:GamePlayer,name:String) extends GamePlayer{
-  override def choose( list:List[(Int,Int)] , b:Board):(Int,Int) = {
+  override def choose( list:List[Move] , b:Board):(Move) = {
     println( name + " to Play")
     b.print
     val choice = inner.choose( list , b );

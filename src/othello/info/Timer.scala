@@ -2,7 +2,7 @@ package othello.info
 import java.util.Calendar
 
 object Timer {
-  def getTime() = Calendar.getInstance().getTime().getTime()
+  def getTime() = System.nanoTime
   
   
   def timeFunction[A,B]( functionName:String , function:Function1[A,B] ):(A=>B) = {
@@ -23,7 +23,7 @@ object Timer {
 		  val start = this.getTime();
 		  val rv = function.apply( p1 , p2 )
 		  val end = this.getTime();
-		  Timer.log( functionName +" stop ("+(end-start)+")")
+		  Timer.log( functionName +" stop ("+1e-9*(end-start)+")")
 		  rv
 	  }
 	  inner _
