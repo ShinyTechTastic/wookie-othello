@@ -1,6 +1,5 @@
 package othello.info
 import scala.util.Random
-import scala.collection.parallel.immutable.ParSeq
 
 class GeneticPlayer( val data:List[Double] ) extends MiniMax( 3 ) { 
   def scoreFunction(p:Player):(Move)=>Double = new GeneticChooser( data )(p)
@@ -16,9 +15,8 @@ class GeneticChooser( val data:List[Double] ) extends Function1[Player, Move => 
   }
   
   def evalBlack( move:Move ):Double = {
-   val newBoard = move.board;
-   val allScores:ParSeq[Double] = Board.allMoves.map(  // allMoves is also all positions
-       pos => data( posIndex(pos, newBoard ) ) );
+   val allScores:Set[Double] = Board.allMoves.map(  // allMoves is also all positions
+       pos => data( posIndex(pos, move.board ) ) );
    allScores.reduce( (a,b)=>a+b )
   }
   

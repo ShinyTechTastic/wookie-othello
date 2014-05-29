@@ -46,7 +46,7 @@ class Board ( val black: Long , val white:Long , val turn:Player ){
 			  	 Board.placeMultipleStones(flips,white) , Black )
   }
   
-  final lazy val validMoves:ParSeq[Move] = Board.allMoves.filter( this.isValidMove ).map( x => new Move(x,this) )
+  final lazy val validMoves:Set[Move] = Board.allMoves.filter( this.isValidMove ).map( x => new Move(x,this) )
     
   final def isValidMove( pos:(Int,Int) ):Boolean = {
     // it's empty        AND             there exists a direction that would Flip something...
@@ -120,14 +120,14 @@ object Board {
     else unplaceMultipleStones( pos.tail , unplaceStone( pos.head , data ) )
   
   
-  final lazy val allMoves = allMovesAfter(0,0).par
+  final val allMoves = allMovesAfter(0,0)
   
   // Recursivly generate the list of all possible moves
-  def allMovesAfter( x:Int , y:Int ):List[(Int,Int)] =
+  def allMovesAfter( x:Int , y:Int ):Set[(Int,Int)] =
     if ( x == 7 )
-      if ( y == 7 ) List((x,y))
-      else (x,y) :: allMovesAfter( 0 , y+1 );
-    else (x,y) :: allMovesAfter( x+1 , y )
+      if ( y == 7 ) Set((x,y))
+      else  allMovesAfter( 0 , y+1 ) + ((x,y));
+    else allMovesAfter( x+1 , y ) + ((x,y))
     
   val initalBlack = placeStone( (3,3) , placeStone( (4,4) , 0 ) )
   val initalWhite = placeStone( (3,4) , placeStone( (4,3) , 0 ) )
