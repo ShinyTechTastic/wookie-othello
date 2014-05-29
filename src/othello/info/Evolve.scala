@@ -6,7 +6,7 @@ object Evolve extends App {
 	
 	override def main(args: Array[String]) {
 	  val r = new Random()
-	  val initial = generateInitialPlayers( 10 , r);
+	  val initial = generateInitialPlayers( 20 , r);
 	  
 	  val time = Calendar.getInstance().getTime()
 	  println(time + " starting the games" );
