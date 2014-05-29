@@ -1,5 +1,7 @@
 package othello.info
 
+import scala.collection.parallel.immutable.ParSeq
+
 abstract class MiniMax( val depth:Int ) extends GamePlayer {
   
   def maxi (a:Double,b:Double):Boolean = a<b
@@ -9,35 +11,29 @@ abstract class MiniMax( val depth:Int ) extends GamePlayer {
   
   def scorer( useMaxi:Boolean ):(Double,Double)=> Boolean = if (useMaxi) maxi else mini
   
-  def findBestMove( moves:List[(Double,Move)] , compare:(Double,Double)=>Boolean ):(Double,Move) = {
-    if ( moves.tail.isEmpty ) 
-      moves.head
-    else{
-      val other = findBestMove( moves.tail , compare )
-      if ( compare(moves.head._1 , other._1 ) )
-        moves.head
-      else
-        other
+  def findBestMove( moves:ParSeq[(Double,Move)] , compare:(Double,Double)=>Boolean ):(Double,Move) = {
+    def findBest( a:(Double,Move) , b:(Double,Move) ):(Double,Move) = {
+      if ( compare(a._1,b._1) ) a else b
     }
+    moves.fold( (Double.MinValue,Move.pass) )( findBest )
   }
   
-  override def choose( list:List[Move] , b:Board):(Move) = {
+  override def choose( list:ParSeq[Move] , b:Board):(Move) = {
     
     val score = scoreFunction( b.turn );
     
-	  def scoreList( list:List[Move] ):List[(Double,Move)] = {
+	  def scoreList( list:ParSeq[Move] ):ParSeq[(Double,Move)] = {
 	    list.map( a => (score(a),a) )
 	  } 
 	  
-	  def searchList( list:List[Move] , depth:Int , useMaxi:Boolean ):List[(Double,Move)] = {
+	  def searchList( list:ParSeq[Move] , depth:Int , useMaxi:Boolean ):ParSeq[(Double,Move)] = {
 	    list.map( a => {
 	      val (score,_) = doMiniMax( a.board.validMoves , a.board , depth , useMaxi ) // we don't care what the next move is
 	      ( score , a )
 	    });
 	  }
 	  
-	  
-	  def doMiniMax( list:List[Move] , board:Board , depth:Int , useMaxi:Boolean ):(Double,(Move)) = {
+	  def doMiniMax( list:ParSeq[Move] , board:Board , depth:Int , useMaxi:Boolean ):(Double,(Move)) = {
 	    if ( list.isEmpty )
 	      if (useMaxi) (Double.MaxValue,Move.pass) else (Double.MinValue,Move.pass) // pass moves?
 	    else if ( depth <= 0 ){
