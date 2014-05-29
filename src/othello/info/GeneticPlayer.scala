@@ -49,7 +49,7 @@ class GeneticChooser( val data:List[Double] ) extends Function1[Player, Move => 
   final def posIndex2( pos:(Int,Int) , offset:Int ):Int = {
     val (x,y) = pos
     val (x2,y2) = ( symetry(x),symetry(y) )
-    (x + (4*y)) + (16 * offset)
+    (x2 + (4*y2)) + (16 * offset)
   }
 }
 
