@@ -2,11 +2,11 @@ package othello.info
 import scala.util.Random
 
 abstract class GamePlayer {
-  def choose( list:List[(Int,Int)] , b:Board):(Int,Int)
+  def choose( list:List[(Int,Int)] , b:Board ):(Int,Int)
 }
 
 object RandomPlayer extends GamePlayer {
-  override def choose( list:List[(Int,Int)] , b:Board):(Int,Int) = Random.shuffle(list).head
+  override def choose( list:List[(Int,Int)] , b:Board ):(Int,Int) = Random.shuffle(list).head
 }
 
 abstract class ScoringPlayer extends GamePlayer {

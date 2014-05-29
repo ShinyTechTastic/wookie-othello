@@ -44,14 +44,14 @@ class Board ( val black: Long , val white:Long , val turn:Player ){
 			  	 Board.placeMultipleStones(flips,white) , Black )
   }
   
-  def validMoves():List[(Int,Int)] = Board.allMoves.filter( this.isValidMove )
+  final lazy val validMoves:List[(Int,Int)] = Board.allMoves.filter( this.isValidMove )
     
-  def isValidMove( pos:(Int,Int) ):Boolean = {
+  final def isValidMove( pos:(Int,Int) ):Boolean = {
     // it's empty        AND             there exists a direction that would Flip something...
     ( at( pos ) == Empty ) && Board.directions.exists( x => this.wouldFlip( turn , pos , x , 0 ) > 0 )
   }
   
-  def wouldFlip( turn:Player , pos:(Int,Int) , direction:(Int,Int) , steps:Int ):Int = {
+  final def wouldFlip( turn:Player , pos:(Int,Int) , direction:(Int,Int) , steps:Int ):Int = {
 	  val (pX,pY) = pos;
 	  val (dX,dY) = direction;
 	  val piece = this.at( pX+dX , pY+dY );
@@ -69,7 +69,7 @@ class Board ( val black: Long , val white:Long , val turn:Player ){
 	  else pos :: flipPositions( turn , (pX+dX,pY+dY) , direction)
   }
   
-  def count():(Int,Int) = {
+  final lazy val count:(Int,Int) = {
      def innerCount( list:List[(Int,Int)] , accu:(Int,Int) ):(Int,Int) = {
        if ( list.isEmpty ) accu
        else {
@@ -99,9 +99,9 @@ class Board ( val black: Long , val white:Long , val turn:Player ){
 }
 
 object Board {
-  def offset( pos:(Int,Int) ) = (pos._1 + (pos._2*8))
-  def at( data:Long , pos:(Int,Int) ): Boolean = (data >> offset(pos) & 0x1) == 1;
-  def valid( pos:(Int,Int) ): Boolean = {
+  final def offset( pos:(Int,Int) ) = (pos._1 + (pos._2*8))
+  final def at( data:Long , pos:(Int,Int) ): Boolean = (data >> offset(pos) & 0x1) == 1;
+  final def valid( pos:(Int,Int) ): Boolean = {
     val (x,y) = pos
     x >=0 && y >=0 && x<=7 && y<=7 
   }
@@ -116,7 +116,7 @@ object Board {
     else unplaceMultipleStones( pos.tail , unplaceStone( pos.head , data ) )
   
   
-  val allMoves:List[(Int,Int)] = allMovesAfter(0,0)
+  final lazy val allMoves:List[(Int,Int)] = allMovesAfter(0,0)
   
   // Recursivly generate the list of all possible moves
   def allMovesAfter( x:Int , y:Int ):List[(Int,Int)] =

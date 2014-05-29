@@ -3,7 +3,7 @@ import scala.util.Random
 
 class Tournament( val p1:GamePlayer , val p2:GamePlayer) {
 
-  def playMatches( pA:GamePlayer , pB:GamePlayer ):Int = {
+  def playMatch( pA:GamePlayer , pB:GamePlayer ):Int = {
     // returns 1 if pA won, 2 if pB won or -1 if it's draw
     def playMove( b:Board ):Board = {
       val moves = b.validMoves
@@ -24,10 +24,11 @@ class Tournament( val p1:GamePlayer , val p2:GamePlayer) {
   }
   
   def playRound():Int = {
+    val tPlayMatch = Timer.timeFunction("playMatch", playMatch _ )
     if ( Random.nextBoolean ){
-      playMatches( p1 , p2 )
+      tPlayMatch( p1 , p2 )
     }else{
-      val n = playMatches( p2 , p1 )
+      val n = tPlayMatch( p2 , p1 )
       if ( n == 1 ) 2
       else if ( n==2 ) 1
       else -1
@@ -47,6 +48,6 @@ class Tournament( val p1:GamePlayer , val p2:GamePlayer) {
           bestOfInner( (accu._1 , accu._2 ) )
       }
     }
-    bestOfInner( (0,0) );
+    Timer.timeFunction("bestOfInner", bestOfInner _ )( (0,0) );
   }
 }
